@@ -1,0 +1,129 @@
+{
+	"info": {
+		"name": "CodeGraph Judge Engine v1",
+		"description": "API collection for the CodeGraph Judge Engine, supporting Blind 75 problems and LeetCode-style code submissions.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin: Problems",
+			"item": [
+				{
+					"name": "List Problems (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/problems?page=0&size=10&sort=difficulty,asc",
+							"host": ["{{base_url}}"],
+							"path": ["problems"],
+							"query": [
+								{ "key": "page", "value": "0" },
+								{ "key": "size", "value": "10" },
+								{ "key": "sort", "value": "difficulty,asc" }
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Specific Problem",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/problems/1",
+							"host": ["{{base_url}}"],
+							"path": ["problems", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Submission: Code Judge",
+			"item": [
+				{
+					"name": "Submit: Two Sum (LeetCode Style)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"problemId\": 1,\n    \"language\": \"JAVA\",\n    \"sourceCode\": \"class Solution {\\n    public int[] twoSum(int[] nums, int target) {\\n        Map<Integer, Integer> map = new HashMap<>();\\n        for (int i = 0; i < nums.length; i++) {\\n            int comp = target - nums[i];\\n            if (map.containsKey(comp)) return new int[] { map.get(comp), i };\\n            map.put(nums[i], i);\\n        }\\n        return null;\\n    }\\n}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/submit",
+							"host": ["{{base_url}}"],
+							"path": ["submit"]
+						}
+					}
+				},
+				{
+					"name": "Submit: Run (Sample Tests)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"problemId\": 1,\n    \"language\": \"JAVA\",\n    \"sourceCode\": \"class Solution {\\n    public int[] twoSum(int[] nums, int target) {\\n        Map<Integer, Integer> map = new HashMap<>();\\n        for (int i = 0; i < nums.length; i++) {\\n            int comp = target - nums[i];\\n            if (map.containsKey(comp)) return new int[] { map.get(comp), i };\\n            map.put(nums[i], i);\\n        }\\n        return null;\\n    }\\n}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/submit/run",
+							"host": ["{{base_url}}"],
+							"path": ["submit", "run"]
+						}
+					}
+				},
+				{
+					"name": "Get Submission Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/submit/1",
+							"host": ["{{base_url}}"],
+							"path": ["submit", "1"]
+						}
+					}
+				},
+				{
+					"name": "List All Submissions (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/submit?page=0&size=10&sort=id,desc",
+							"host": ["{{base_url}}"],
+							"path": ["submit"],
+							"query": [
+								{ "key": "page", "value": "0" },
+								{ "key": "size", "value": "10" },
+								{ "key": "sort", "value": "id,desc" }
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

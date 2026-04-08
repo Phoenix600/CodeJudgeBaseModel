@@ -40,6 +40,21 @@ public class Submission {
     @Lob
     private String runtimeError;
 
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String failedInput;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String expectedOutput;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String actualOutput;
+
+    private Integer passedTestCases = 0;
+    private Integer totalTestCases = 0;
+
     private LocalDateTime submittedAt = LocalDateTime.now();
 
     // Getters and Setters

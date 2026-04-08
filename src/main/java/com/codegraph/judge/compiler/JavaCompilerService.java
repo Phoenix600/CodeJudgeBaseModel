@@ -7,13 +7,25 @@ import java.io.IOException;
 
 @Component
 public class JavaCompilerService {
+    private final com.codegraph.config.JudgeConfig judgeConfig;
+
+    public JavaCompilerService(com.codegraph.config.JudgeConfig judgeConfig) {
+        this.judgeConfig = judgeConfig;
+    }
 
     public void compile(File workspace) {
+
+        String javacPath;
+        if (judgeConfig.getBundledJdkPath() != null && !judgeConfig.getBundledJdkPath().isBlank()) {
+            javacPath = new File(judgeConfig.getBundledJdkPath(), "bin/javac").getAbsolutePath();
+        } else {
+            javacPath = (judgeConfig.getJavacPath() != null) ? judgeConfig.getJavacPath() : "javac";
+        }
 
         try {
 
             ProcessBuilder pb =
-                    new ProcessBuilder("javac", "Main.java");
+                    new ProcessBuilder(javacPath, "Main.java");
 
             pb.directory(workspace);
             pb.redirectErrorStream(true);

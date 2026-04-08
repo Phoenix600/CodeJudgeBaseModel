@@ -11,7 +11,6 @@ import com.codegraph.judge.comparator.OutputComparator;
 import com.codegraph.submission.entity.Submission;
 import com.codegraph.submission.repository.SubmissionRepository;
 import com.codegraph.testcase.repository.TestCaseRepository;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -27,6 +26,7 @@ public class JudgeEngine {
     private final OutputComparator comparator;
     private final SubmissionRepository submissionRepository;
     private final TestCaseRepository testCaseRepository;
+    private final com.codegraph.problem.repository.ProblemRepository problemRepository;
 
     public JudgeEngine(WorkspaceManager workspaceManager,
                        CodeValidator validator,
@@ -35,7 +35,8 @@ public class JudgeEngine {
                        JavaRunner runner,
                        OutputComparator comparator,
                        SubmissionRepository submissionRepository,
-                       TestCaseRepository testCaseRepository) {
+                       TestCaseRepository testCaseRepository,
+                       com.codegraph.problem.repository.ProblemRepository problemRepository) {
 
         this.workspaceManager = workspaceManager;
         this.validator = validator;
@@ -45,28 +46,33 @@ public class JudgeEngine {
         this.comparator = comparator;
         this.submissionRepository = submissionRepository;
         this.testCaseRepository = testCaseRepository;
+        this.problemRepository = problemRepository;
     }
 
     public void judge(Submission submission) {
+        // ... (existing logic, but I'll update it to use the new common logic if I can)
+        // Actually, I'll just add the new method first.
+        runFullJudge(submission);
+    }
 
+    private void runFullJudge(Submission submission) {
         File workspace = null;
-
         long totalTime = 0;
         long peakMemory = 0;
 
         try {
-
             validator.validate(submission.getSourceCode());
+            workspace = workspaceManager.create(String.valueOf(submission.getId()));
 
-            workspace = workspaceManager.create(submission.getId());
+            var problem = problemRepository.findById(submission.getProblemId())
+                    .orElseThrow(() -> new RuntimeException("Problem not found"));
 
-            wrapper.writeMain(workspace, submission.getSourceCode());
+            wrapper.writeMain(workspace, submission.getSourceCode(), problem.getDriverCode());
             wrapper.writePolicy(workspace);
-
             compiler.compile(workspace);
 
-            var testcases =
-                    testCaseRepository.findByProblem_Id(submission.getProblemId());
+            var testcases = testCaseRepository.findByProblem_Id(submission.getProblemId());
+            submission.setTotalTestCases(testcases.size());
 
             if (testcases.isEmpty()) {
                 submission.setStatus(SubmissionStatus.RUNTIME_ERROR);
@@ -75,59 +81,114 @@ public class JudgeEngine {
                 return;
             }
 
+            int passedCount = 0;
             for (var tc : testcases) {
-
                 var result = runner.run(workspace, tc.getInput());
-
                 totalTime += result.timeMs();
                 peakMemory = Math.max(peakMemory, result.memoryKb());
 
-                String output = result.output();
-
-                if (!comparator.compare(output, tc.getExpectedOutput())) {
-
+                if (!comparator.compare(result.output(), tc.getExpectedOutput())) {
                     submission.setStatus(SubmissionStatus.WRONG_ANSWER);
                     submission.setExecutionTimeMs(totalTime);
                     submission.setMemoryKb(peakMemory);
+                    submission.setPassedTestCases(passedCount);
+                    
+                    // Add diagnostic details
+                    submission.setFailedInput(tc.getInput());
+                    submission.setExpectedOutput(tc.getExpectedOutput());
+                    submission.setActualOutput(result.output());
+                    
                     submissionRepository.save(submission);
                     return;
                 }
+                passedCount++;
             }
 
+            submission.setPassedTestCases(passedCount);
             submission.setExecutionTimeMs(totalTime);
             submission.setMemoryKb(peakMemory);
             submission.setStatus(SubmissionStatus.ACCEPTED);
             submissionRepository.save(submission);
 
         } catch (CompilationException ce) {
-
             submission.setStatus(SubmissionStatus.COMPILATION_ERROR);
             submission.setCompileError(ce.getMessage());
             submissionRepository.save(submission);
+        } catch (Exception e) {
+            handleException(submission, e, totalTime, peakMemory);
+        } finally {
+            if (workspace != null) workspaceManager.cleanupBySubmission(String.valueOf(submission.getId()));
+        }
+    }
 
-        } catch (RuntimeException e) {
+    public com.codegraph.submission.dto.RunResult runSampleTestCases(com.codegraph.submission.dto.RunRequest request) {
+        File workspace = null;
+        String workId = "run-" + java.util.UUID.randomUUID();
+        var results = new java.util.ArrayList<com.codegraph.submission.dto.TestCaseRunResult>();
 
-            submission.setExecutionTimeMs(totalTime);
-            submission.setMemoryKb(peakMemory);
+        try {
+            validator.validate(request.getSourceCode());
+            workspace = workspaceManager.create(workId);
 
-            if ("TIME_LIMIT_EXCEEDED".equals(e.getMessage())) {
-                submission.setStatus(SubmissionStatus.TIME_LIMIT_EXCEEDED);
-            } else {
-                submission.setStatus(SubmissionStatus.RUNTIME_ERROR);
-                submission.setRuntimeError(e.getMessage());
+            var problem = problemRepository.findById(request.getProblemId())
+                    .orElseThrow(() -> new RuntimeException("Problem not found"));
+
+            wrapper.writeMain(workspace, request.getSourceCode(), problem.getDriverCode());
+            wrapper.writePolicy(workspace);
+            compiler.compile(workspace);
+
+            var testcases = testCaseRepository.findByProblem_Id(request.getProblemId()).stream()
+                    .filter(tc -> tc.getSample() != null && tc.getSample())
+                    .toList();
+
+            boolean allPassed = true;
+            for (var tc : testcases) {
+                var res = runner.run(workspace, tc.getInput());
+                boolean passed = comparator.compare(res.output(), tc.getExpectedOutput());
+                if (!passed) allPassed = false;
+
+                results.add(com.codegraph.submission.dto.TestCaseRunResult.builder()
+                        .input(tc.getInput())
+                        .expectedOutput(tc.getExpectedOutput())
+                        .actualOutput(res.output())
+                        .passed(passed)
+                        .executionTimeMs(res.timeMs())
+                        .memoryKb(res.memoryKb())
+                        .build());
             }
 
-            submissionRepository.save(submission);
+            return com.codegraph.submission.dto.RunResult.builder()
+                    .compiled(true)
+                    .results(results)
+                    .status(allPassed ? "ACCEPTED" : "WRONG_ANSWER")
+                    .build();
 
+        } catch (CompilationException ce) {
+            return com.codegraph.submission.dto.RunResult.builder()
+                    .compiled(false)
+                    .compileError(ce.getMessage())
+                    .status("COMPILATION_ERROR")
+                    .build();
         } catch (Exception e) {
+            return com.codegraph.submission.dto.RunResult.builder()
+                    .compiled(true)
+                    .status("RUNTIME_ERROR")
+                    .compileError(e.getMessage())
+                    .build();
+        } finally {
+            if (workspace != null) workspaceManager.cleanupBySubmission(workId);
+        }
+    }
 
+    private void handleException(Submission submission, Exception e, long totalTime, long peakMemory) {
+        submission.setExecutionTimeMs(totalTime);
+        submission.setMemoryKb(peakMemory);
+        if ("TIME_LIMIT_EXCEEDED".equals(e.getMessage())) {
+            submission.setStatus(SubmissionStatus.TIME_LIMIT_EXCEEDED);
+        } else {
             submission.setStatus(SubmissionStatus.RUNTIME_ERROR);
             submission.setRuntimeError(e.getMessage());
-            submissionRepository.save(submission);
-
-        } finally {
-
-            workspaceManager.cleanupBySubmission(submission.getId());
         }
+        submissionRepository.save(submission);
     }
 }

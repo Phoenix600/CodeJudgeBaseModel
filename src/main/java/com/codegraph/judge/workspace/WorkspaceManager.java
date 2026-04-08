@@ -15,9 +15,9 @@ public class WorkspaceManager {
         this.config = config;
     }
 
-    public File create(Long submissionId) {
+    public File create(String id) {
 
-        File dir = new File(config.getWorkspace() + "/" + submissionId);
+        File dir = new File(config.getWorkspace() + "/" + id);
         dir.mkdirs();
         return dir;
     }
@@ -36,7 +36,7 @@ public class WorkspaceManager {
         dir.delete();
     }
 
-    public void cleanupBySubmission(Long id) {
+    public void cleanupBySubmission(String id) {
 
         cleanup(new File(config.getWorkspace() + "/" + id));
     }

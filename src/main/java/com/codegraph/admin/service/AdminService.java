@@ -6,7 +6,6 @@ import com.codegraph.problem.entity.Problem;
 import com.codegraph.problem.repository.ProblemRepository;
 import com.codegraph.testcase.repository.TestCaseRepository;
 import com.codegraph.testcase.entity.TestCase;
-;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,5 +54,18 @@ public class AdminService {
         for (MultipartFile file : files) {
             file.transferTo(new File(dir, file.getOriginalFilename()));
         }
+    }
+
+    public org.springframework.data.domain.Page<Problem> fetchAllProblems(org.springframework.data.domain.Pageable pageable) {
+        return problemRepository.findAll(pageable);
+    }
+
+    public Problem fetchProblemById(Long id) {
+        return problemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Problem not found with id: " + id));
+    }
+
+    public List<TestCase> fetchSampleTestCases(Long problemId) {
+        return testCaseRepository.findByProblem_IdAndSampleTrue(problemId);
     }
 }

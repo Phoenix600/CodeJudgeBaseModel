@@ -18,10 +18,17 @@ public class JavaRunner {
 
         long start = System.currentTimeMillis();
 
+        String javaPath;
+        if (config.getBundledJdkPath() != null && !config.getBundledJdkPath().isBlank()) {
+            javaPath = new File(config.getBundledJdkPath(), "bin/java").getAbsolutePath();
+        } else {
+            javaPath = (config.getJavaPath() != null) ? config.getJavaPath() : "java";
+        }
+
         try {
 
             ProcessBuilder pb = new ProcessBuilder(
-                    "java",
+                    javaPath,
                     "-Xmx" + config.getJavaMemory(),
                     "-XX:ActiveProcessorCount=1",
                     "-XX:MaxMetaspaceSize=64m",

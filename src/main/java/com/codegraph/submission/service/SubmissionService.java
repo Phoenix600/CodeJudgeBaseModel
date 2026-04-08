@@ -39,9 +39,21 @@ public class SubmissionService {
         return s;
     }
 
+    public com.codegraph.submission.dto.RunResult run(com.codegraph.submission.dto.RunRequest request) {
+        return judgeEngine.runSampleTestCases(request);
+    }
+
     public Submission getSubmission(Long id) {
         return submissionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Submission not found"));
+    }
+
+    public org.springframework.data.domain.Page<Submission> getAllSubmissions(org.springframework.data.domain.Pageable pageable) {
+        return submissionRepository.findAll(pageable);
+    }
+
+    public org.springframework.data.domain.Page<Submission> getSubmissionsByProblem(Long problemId, org.springframework.data.domain.Pageable pageable) {
+        return submissionRepository.findByProblemId(problemId, pageable);
     }
 
     @Async

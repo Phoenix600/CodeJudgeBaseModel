@@ -1,5 +1,6 @@
 package com.codegraph.problem.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Represents a coding challenge")
 public class Problem {
 
     @Id
@@ -38,5 +40,13 @@ public class Problem {
     private Boolean active = true;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String driverCode;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String solutionTemplate;
 
 }
