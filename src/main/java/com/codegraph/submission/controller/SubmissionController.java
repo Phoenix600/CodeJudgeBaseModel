@@ -36,16 +36,19 @@ public class SubmissionController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get submission status", description = "Retrieves the status, results, and execution metrics for a specific submission.")
     public ApiResponse<Submission> get(@PathVariable Long id) {
         return ApiResponse.success(submissionService.getSubmission(id));
     }
 
     @GetMapping
+    @Operation(summary = "List all submissions (Paginated)", description = "Retrieves a paginated list of all submissions across all problems.")
     public ApiResponse<Page<Submission>> getAll(Pageable pageable) {
         return ApiResponse.success(submissionService.getAllSubmissions(pageable));
     }
 
     @GetMapping("/problem/{problemId}")
+    @Operation(summary = "List submissions by Problem ID", description = "Retrieves a paginated list of submissions for a specific challenge.")
     public ApiResponse<Page<Submission>> getByProblem(@PathVariable Long problemId, Pageable pageable) {
         return ApiResponse.success(submissionService.getSubmissionsByProblem(problemId, pageable));
     }

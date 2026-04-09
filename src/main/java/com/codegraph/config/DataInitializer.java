@@ -32,13 +32,13 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // ALWAYS clean the DB to start fresh with Blind 75
-        System.out.println("Cleaning database...");
-        testCaseRepository.deleteAll();
-        problemRepository.deleteAll();
+        // System.out.println("Cleaning database...");
+        // testCaseRepository.deleteAll();
+        // problemRepository.deleteAll();
 
-        System.out.println("Seeding Blind 75 problems from JSON...");
-        loadProblemsFromJson();
-        System.out.println("Seed complete!");
+        // System.out.println("Seeding Blind 75 problems from JSON...");
+        // loadProblemsFromJson();
+        // System.out.println("Seed complete!");
     }
 
     private void loadProblemsFromJson() throws Exception {
