@@ -19,11 +19,11 @@ cp target/$MAIN_JAR deploy/
 
 # 4. Create Isolated Runtime (Linux version)
 # Including jdk.compiler so the Judge Engine can compile Java submissions
-if [ ! -d "runtime" ]; then
-    echo "⚙️  Generating isolated Linux Java runtime..."
-    jlink --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,jdk.compiler \
-          --output runtime --strip-debug --no-header-files --no-man-pages --compress=2
-fi
+echo "⚙️  Generating fresh isolated Linux Java runtime..."
+rm -rf runtime
+jlink --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,jdk.compiler \
+      --output runtime --strip-debug --no-header-files --no-man-pages --compress=2
+
 
 # 5. Build Native Packages
 echo "🛠 Building native DEB installer..."

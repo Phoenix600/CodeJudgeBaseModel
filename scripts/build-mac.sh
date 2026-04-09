@@ -18,11 +18,11 @@ mkdir -p deploy dist
 cp target/$MAIN_JAR deploy/
 
 # 4. Create Isolated Runtime (macOS version)
-if [ ! -d "runtime" ]; then
-    echo "⚙️  Generating isolated macOS Java runtime..."
-    jlink --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,jdk.compiler \
-          --output runtime --strip-debug --no-header-files --no-man-pages --compress=2
-fi
+echo "⚙️  Generating fresh isolated macOS Java runtime..."
+rm -rf runtime
+jlink --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,jdk.compiler \
+      --output runtime --strip-debug --no-header-files --no-man-pages --compress=2
+
 
 # 5. Build the Native Package
 echo "🛠 Building native DMG installer..."
