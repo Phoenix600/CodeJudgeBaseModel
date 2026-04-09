@@ -8,6 +8,15 @@ LAUNCHER="org.springframework.boot.loader.launch.JarLauncher"
 
 echo "🚀 Starting Linux build for CodeGraph v$APP_VERSION..."
 
+# 1.5 Check Dependencies
+for tool in jlink jpackage fakeroot; do
+    if ! command -v $tool &> /dev/null; then
+        echo "❌ Error: $tool is not installed. Run: sudo apt install openjdk-17-jdk fakeroot"
+        exit 1
+    fi
+done
+
+
 # 2. Build the JAR
 ./mvnw clean package -DskipTests
 
