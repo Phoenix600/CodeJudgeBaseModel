@@ -3,7 +3,7 @@
 
 # 1. Setup Versioning & Paths
 APP_VERSION="1.0.0"
-MAIN_JAR="demo-0.0.1-SNAPSHOT.jar"
+MAIN_JAR="codegraph-0.0.1-SNAPSHOT.jar"
 LAUNCHER="org.springframework.boot.loader.launch.JarLauncher"
 
 echo "🚀 Starting macOS build for CodeGraph v$APP_VERSION..."

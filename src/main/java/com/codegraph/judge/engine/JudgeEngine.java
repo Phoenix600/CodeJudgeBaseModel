@@ -49,13 +49,11 @@ public class JudgeEngine {
         this.problemRepository = problemRepository;
     }
 
-    public void judge(Submission submission) {
-        // ... (existing logic, but I'll update it to use the new common logic if I can)
-        // Actually, I'll just add the new method first.
-        runFullJudge(submission);
+    public void judge(Submission submission, String driverCode, java.util.List<com.codegraph.submission.dto.TestCaseDto> testcases) {
+        runFullJudge(submission, driverCode, testcases);
     }
 
-    private void runFullJudge(Submission submission) {
+    private void runFullJudge(Submission submission, String driverCode, java.util.List<com.codegraph.submission.dto.TestCaseDto> testcases) {
         File workspace = null;
         long totalTime = 0;
         long peakMemory = 0;
@@ -64,14 +62,10 @@ public class JudgeEngine {
             validator.validate(submission.getSourceCode());
             workspace = workspaceManager.create(String.valueOf(submission.getId()));
 
-            var problem = problemRepository.findById(submission.getProblemId())
-                    .orElseThrow(() -> new RuntimeException("Problem not found"));
-
-            wrapper.writeMain(workspace, submission.getSourceCode(), problem.getDriverCode());
+            wrapper.writeMain(workspace, submission.getSourceCode(), driverCode);
             wrapper.writePolicy(workspace);
             compiler.compile(workspace);
 
-            var testcases = testCaseRepository.findByProblem_Id(submission.getProblemId());
             submission.setTotalTestCases(testcases.size());
 
             if (testcases.isEmpty()) {
@@ -97,6 +91,9 @@ public class JudgeEngine {
                     submission.setFailedInput(tc.getInput());
                     submission.setExpectedOutput(tc.getExpectedOutput());
                     submission.setActualOutput(result.output());
+                    submission.setFailedTestCaseImage(tc.getImage());
+                    submission.setFailedTestCaseExplanation(tc.getExplanation());
+                    submission.setFailedTestCaseImageScale(tc.getImageScale());
                     
                     submissionRepository.save(submission);
                     return;
@@ -125,21 +122,23 @@ public class JudgeEngine {
         File workspace = null;
         String workId = "run-" + java.util.UUID.randomUUID();
         var results = new java.util.ArrayList<com.codegraph.submission.dto.TestCaseRunResult>();
+        var testcases = request.getTestCases();
 
         try {
             validator.validate(request.getSourceCode());
             workspace = workspaceManager.create(workId);
 
-            var problem = problemRepository.findById(request.getProblemId())
-                    .orElseThrow(() -> new RuntimeException("Problem not found"));
-
-            wrapper.writeMain(workspace, request.getSourceCode(), problem.getDriverCode());
+            wrapper.writeMain(workspace, request.getSourceCode(), request.getDriverCode());
             wrapper.writePolicy(workspace);
             compiler.compile(workspace);
 
-            var testcases = testCaseRepository.findByProblem_Id(request.getProblemId()).stream()
-                    .filter(tc -> tc.getSample() != null && tc.getSample())
-                    .toList();
+            if (testcases == null || testcases.isEmpty()) {
+                return com.codegraph.submission.dto.RunResult.builder()
+                        .compiled(true)
+                        .status("RUNTIME_ERROR")
+                        .compileError("No test cases provided")
+                        .build();
+            }
 
             boolean allPassed = true;
             for (var tc : testcases) {
@@ -157,11 +156,12 @@ public class JudgeEngine {
                         .build());
             }
 
-            return com.codegraph.submission.dto.RunResult.builder()
+            var response = com.codegraph.submission.dto.RunResult.builder()
                     .compiled(true)
                     .results(results)
                     .status(allPassed ? "ACCEPTED" : "WRONG_ANSWER")
                     .build();
+            return response;
 
         } catch (CompilationException ce) {
             return com.codegraph.submission.dto.RunResult.builder()

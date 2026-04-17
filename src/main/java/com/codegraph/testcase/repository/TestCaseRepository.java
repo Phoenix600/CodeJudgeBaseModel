@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TestCaseRepository extends JpaRepository<TestCase, Long> {
+public interface TestCaseRepository extends JpaRepository<TestCase, String> {
 
-    List<TestCase> findByProblem_Id(Long problemId);
+    List<TestCase> findByProblem_Id(String problemId);
 
-    List<TestCase> findByProblem_IdAndSampleTrue(Long problemId);
+    List<TestCase> findByProblem_IdAndSampleTrue(String problemId);
 }

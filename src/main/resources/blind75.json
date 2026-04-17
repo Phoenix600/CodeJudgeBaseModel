@@ -1,201 +1,172 @@
 [
   {
     "title": "Two Sum",
+    "description": "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.",
     "difficulty": "EASY",
-    "tags": "array,hash-table",
-    "description": "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. Exactly one solution exists.",
+    "tags": ["array", "hash-table"],
+    "chapterTitle": "Arrays & Hashing",
+    "problemType": "fundamentals",
     "solutionTemplate": "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int target = sc.nextInt();\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        int[] res = sol.twoSum(nums, target);\n        System.out.print(Arrays.toString(res));\n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.hasNextInt() ? sc.nextInt() : 0;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n        int target = sc.hasNextInt() ? sc.nextInt() : 0;\n\n        Solution sol = new Solution();\n        int[] result = sol.twoSum(nums, target);\n        System.out.println(\"[\" + result[0] + \", \" + result[1] + \"]\");\n    }\n}",
     "testCases": [
-      { "input": "9\n4\n2 7 11 15", "output": "[0, 1]", "sample": true },
-      { "input": "6\n3\n3 2 4", "output": "[1, 2]", "sample": false },
-      { "input": "-8\n5\n-1 -2 -3 -4 -5", "output": "[2, 4]", "sample": false },
-      { "input": "0\n4\n0 4 3 0", "output": "[0, 3]", "sample": false },
-      { "input": "2000000000\n3\n1000000000 500 1000000000", "output": "[0, 2]", "sample": false },
-      { "input": "10\n4\n5 1 8 5", "output": "[0, 3]", "sample": false },
-      { "input": "10\n2\n5 5", "output": "[0, 1]", "sample": false },
-      { "input": "100\n2\n50 50", "output": "[0, 1]", "sample": false },
-      { "input": "7\n4\n1 1 1 6", "output": "[2, 3]", "sample": false },
-      { "input": "8\n5\n1 2 3 4 5", "output": "[2, 4]", "sample": false },
-      { "input": "2\n2\n1 1", "output": "[0, 1]", "sample": false },
-      { "input": "100\n3\n10 20 70", "output": "[1, 2]", "sample": false },
-      { "input": "100\n4\n10 20 30 70", "output": "[2, 3]", "sample": false },
-      { "input": "100\n5\n10 20 30 40 70", "output": "[2, 4]", "sample": false },
-      { "input": "100\n6\n10 20 30 40 50 70", "output": "[2, 5]", "sample": false },
-      { "input": "100\n7\n10 20 30 40 50 60 70", "output": "[2, 6]", "sample": false }
-    ]
-  },
-  {
-    "title": "Best Time to Buy and Sell Stock",
-    "difficulty": "EASY",
-    "tags": "array,dp",
-    "description": "Find the maximum profit you can achieve by buying on one day and selling on a different day in the future.",
-    "solutionTemplate": "class Solution {\n    public int maxProfit(int[] prices) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] prices = new int[n];\n        for (int i = 0; i < n; i++) prices[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        System.out.print(sol.maxProfit(prices));\n    }\n}",
-    "testCases": [
-      { "input": "6\n7 1 5 3 6 4", "output": "5", "sample": true },
-      { "input": "5\n7 6 4 3 1", "output": "0", "sample": false }
+      {
+        "input": "4\n2 7 11 15\n9",
+        "output": "[0, 1]",
+        "sample": true
+      }
     ]
   },
   {
     "title": "Contains Duplicate",
+    "description": "Given an integer array `nums`, return `true` if any value appears at least twice in the array, and return `false` if every element is distinct.",
     "difficulty": "EASY",
-    "tags": "array,hash-table",
-    "description": "Return true if any value appears at least twice in the array.",
+    "tags": ["array", "hash-table"],
+    "chapterTitle": "Arrays & Hashing",
+    "problemType": "fundamentals",
     "solutionTemplate": "class Solution {\n    public boolean containsDuplicate(int[] nums) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        System.out.print(sol.containsDuplicate(nums));\n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.hasNextInt() ? sc.nextInt() : 0;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        System.out.println(sol.containsDuplicate(nums));\n    }\n}",
     "testCases": [
-      { "input": "4\n1 2 3 1", "output": "true", "sample": true },
-      { "input": "4\n1 2 3 4", "output": "false", "sample": false }
+      {
+        "input": "4\n1 2 3 1",
+        "output": "true",
+        "sample": true
+      }
+    ]
+  },
+  {
+    "title": "Best Time to Buy and Sell Stock",
+    "description": "You are given an array `prices` where `prices[i]` is the price of a given stock on the `i`-th day.\n\nYou want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.\n\nReturn the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.",
+    "difficulty": "EASY",
+    "tags": ["array", "dynamic-programming"],
+    "chapterTitle": "Sliding Window",
+    "problemType": "fundamentals",
+    "solutionTemplate": "class Solution {\n    public int maxProfit(int[] prices) {\n        \n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.hasNextInt() ? sc.nextInt() : 0;\n        int[] prices = new int[n];\n        for (int i = 0; i < n; i++) prices[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        System.out.println(sol.maxProfit(prices));\n    }\n}",
+    "testCases": [
+      {
+        "input": "6\n7 1 5 3 6 4",
+        "output": "5",
+        "sample": true
+      }
     ]
   },
   {
     "title": "Valid Anagram",
+    "description": "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.",
     "difficulty": "EASY",
-    "tags": "string,hash-table",
-    "description": "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`.",
+    "tags": ["string", "hash-table", "sorting"],
+    "chapterTitle": "Arrays & Hashing",
+    "problemType": "fundamentals",
     "solutionTemplate": "class Solution {\n    public boolean isAnagram(String s, String t) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n        String t = sc.next();\n\n        Solution sol = new Solution();\n        System.out.print(sol.isAnagram(s, t));\n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.hasNext() ? sc.next() : \"\";\n        String t = sc.hasNext() ? sc.next() : \"\";\n\n        Solution sol = new Solution();\n        System.out.println(sol.isAnagram(s, t));\n    }\n}",
     "testCases": [
-      { "input": "anagram nagaram", "output": "true", "sample": true },
-      { "input": "rat car", "output": "false", "sample": false }
+      {
+        "input": "anagram\nnagaram",
+        "output": "true",
+        "sample": true
+      }
     ]
   },
   {
-    "title": "Valid Parentheses",
+    "title": "Binary Search Logic",
+    "description": "Given a sorted array `nums` and a `target`, find the index of `target`. If not found, return -1.",
     "difficulty": "EASY",
-    "tags": "string,stack",
-    "description": "Determine if the input string containing parentheses logic is valid.",
-    "solutionTemplate": "class Solution {\n    public boolean isValid(String s) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.next();\n\n        Solution sol = new Solution();\n        System.out.print(sol.isValid(s));\n    }\n}",
+    "tags": ["binary-search", "logic"],
+    "chapterTitle": "Binary Search",
+    "problemType": "logic",
+    "solutionTemplate": "class Solution {\n    public int search(int[] nums, int target) {\n        \n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.hasNextInt() ? sc.nextInt() : 0;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n        int target = sc.hasNextInt() ? sc.nextInt() : 0;\n\n        Solution sol = new Solution();\n        System.out.println(sol.search(nums, target));\n    }\n}",
     "testCases": [
-      { "input": "()[]{}", "output": "true", "sample": true },
-      { "input": "(]", "output": "false", "sample": false }
+      {
+        "input": "6\n-1 0 3 5 9 12\n9",
+        "output": "4",
+        "sample": true
+      }
     ]
   },
   {
-    "title": "Maximum Subarray",
+    "title": "3Sum",
+    "description": "Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.",
     "difficulty": "MEDIUM",
-    "tags": "array,dp",
-    "description": "Find the contiguous subarray with the largest sum.",
-    "solutionTemplate": "class Solution {\n    public int maxSubArray(int[] nums) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        System.out.print(sol.maxSubArray(nums));\n    }\n}",
+    "tags": ["array", "two-pointers", "sorting"],
+    "chapterTitle": "Two Pointers",
+    "problemType": "faq_medium",
+    "solutionTemplate": "class Solution {\n    public List<List<Integer>> threeSum(int[] nums) {\n        \n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.hasNextInt() ? sc.nextInt() : 0;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n\n        Solution sol = new Solution();\n        List<List<Integer>> result = sol.threeSum(nums);\n        Collections.sort(result, (a, b) -> a.get(0).equals(b.get(0)) ? a.get(1).compareTo(b.get(1)) : a.get(0).compareTo(b.get(0)));\n        System.out.println(result);\n    }\n}",
     "testCases": [
-      { "input": "9\n-2 1 -3 4 -1 2 1 -5 4", "output": "6", "sample": true },
-      { "input": "1\n1", "output": "1", "sample": false }
-    ]
-  },
-  {
-    "title": "Merge Two Sorted Lists",
-    "difficulty": "EASY",
-    "tags": "linked-list",
-    "description": "Merge two sorted linked lists and return it as a sorted list.",
-    "solutionTemplate": "/**\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\n{{SOLUTION}}\n\npublic class Main {\n    private static ListNode build(Scanner sc) {\n        int n = sc.nextInt();\n        if (n == 0) return null;\n        ListNode dummy = new ListNode(0);\n        ListNode curr = dummy;\n        for (int i = 0; i < n; i++) {\n            curr.next = new ListNode(sc.nextInt());\n            curr = curr.next;\n        }\n        return dummy.next;\n    }\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        ListNode l1 = build(sc);\n        ListNode l2 = build(sc);\n        Solution sol = new Solution();\n        ListNode res = sol.mergeTwoLists(l1, l2);\n        List<Integer> list = new ArrayList<>();\n        while (res != null) {\n            list.add(res.val);\n            res = res.next;\n        }\n        System.out.print(list);\n    }\n}",
-    "testCases": [
-      { "input": "3 1 2 4 3 1 3 4", "output": "[1, 1, 2, 3, 4, 4]", "sample": true }
-    ]
-  },
-  {
-    "title": "Reverse Linked List",
-    "difficulty": "EASY",
-    "tags": "linked-list",
-    "description": "Given the head of a singly linked list, reverse the list.",
-    "solutionTemplate": "class Solution {\n    public ListNode reverseList(ListNode head) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode(int val) { this.val = val; }\n}\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        ListNode dummy = new ListNode(0);\n        ListNode curr = dummy;\n        for (int i = 0; i < n; i++) {\n            curr.next = new ListNode(sc.nextInt());\n            curr = curr.next;\n        }\n        Solution sol = new Solution();\n        ListNode res = sol.reverseList(dummy.next);\n        List<Integer> list = new ArrayList<>();\n        while (res != null) {\n            list.add(res.val);\n            res = res.next;\n        }\n        System.out.print(list);\n    }\n}",
-    "testCases": [
-      { "input": "5 1 2 3 4 5", "output": "[5, 4, 3, 2, 1]", "sample": true }
+      {
+        "input": "6\n-1 0 1 2 -1 -4",
+        "output": "[[-1, -1, 2], [-1, 0, 1]]",
+        "sample": true
+      }
     ]
   },
   {
     "title": "Longest Substring Without Repeating Characters",
+    "description": "Given a string `s`, find the length of the longest substring without repeating characters.",
     "difficulty": "MEDIUM",
-    "tags": "string,sliding-window",
-    "description": "Find the length of the longest substring without repeating characters.",
+    "tags": ["string", "sliding-window", "hash-table"],
+    "chapterTitle": "Sliding Window",
+    "problemType": "faq_medium",
     "solutionTemplate": "class Solution {\n    public int lengthOfLongestSubstring(String s) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.hasNextLine() ? sc.nextLine() : \"\";\n        Solution sol = new Solution();\n        System.out.print(sol.lengthOfLongestSubstring(s));\n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.hasNextLine() ? sc.nextLine() : \"\";\n\n        Solution sol = new Solution();\n        System.out.println(sol.lengthOfLongestSubstring(s));\n    }\n}",
     "testCases": [
-      { "input": "abcabcbb", "output": "3", "sample": true },
-      { "input": "bbbbb", "output": "1", "sample": false }
+      {
+        "input": "abcabcbb",
+        "output": "3",
+        "sample": true
+      }
     ]
   },
   {
-    "title": "Coin Change",
-    "difficulty": "MEDIUM",
-    "tags": "dp",
-    "description": "Find the fewest number of coins that you need to make up that amount.",
-    "solutionTemplate": "class Solution {\n    public int coinChange(int[] coins, int amount) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] coins = new int[n];\n        for (int i = 0; i < n; i++) coins[i] = sc.nextInt();\n        int amount = sc.nextInt();\n        Solution sol = new Solution();\n        System.out.print(sol.coinChange(coins, amount));\n    }\n}",
+    "title": "Minimum Window Substring",
+    "description": "Given two strings `s` and `t`, return the minimum window substring of `s` such that every character in `t` is included in the window.",
+    "difficulty": "HARD",
+    "tags": ["string", "sliding-window", "hash-table"],
+    "chapterTitle": "Sliding Window",
+    "problemType": "faq_hard",
+    "solutionTemplate": "class Solution {\n    public String minWindow(String s, String t) {\n        \n    }\n}",
+    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.hasNext() ? sc.next() : \"\";\n        String t = sc.hasNext() ? sc.next() : \"\";\n\n        Solution sol = new Solution();\n        System.out.println(sol.minWindow(s, t));\n    }\n}",
     "testCases": [
-      { "input": "3 1 2 5 11", "output": "3", "sample": true }
+      {
+        "input": "ADOBECODEBANC\nABC",
+        "output": "BANC",
+        "sample": true
+      }
     ]
   },
   {
-    "title": "Climbing Stairs",
+    "title": "Merge k Sorted Lists",
+    "description": "You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.\n\nMerge all the linked-lists into one sorted linked-list and return it.",
+    "difficulty": "HARD",
+    "tags": ["linked-list", "divide-and-conquer", "heap-priority-queue"],
+    "chapterTitle": "Linked List",
+    "problemType": "faq_hard",
+    "solutionTemplate": "class Solution {\n    public ListNode mergeKLists(ListNode[] lists) {\n        \n    }\n}",
+    "driverCode": "import java.util.*;\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode() {}\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int k = sc.hasNextInt() ? sc.nextInt() : 0;\n        ListNode[] lists = new ListNode[k];\n        for (int i = 0; i < k; i++) {\n            int n = sc.nextInt();\n            if (n == 0) continue;\n            ListNode dummy = new ListNode(0);\n            ListNode curr = dummy;\n            for (int j = 0; j < n; j++) {\n                curr.next = new ListNode(sc.nextInt());\n                curr = curr.next;\n            }\n            lists[i] = dummy.next;\n        }\n\n        Solution sol = new Solution();\n        ListNode head = sol.mergeKLists(lists);\n        List<Integer> result = new ArrayList<>();\n        while (head != null) {\n            result.add(head.val);\n            head = head.next;\n        }\n        System.out.println(result);\n    }\n}",
+    "testCases": [
+      {
+        "input": "3\n3\n1 4 5\n3\n1 3 4\n2\n2 6",
+        "output": "[1, 1, 2, 3, 4, 4, 5, 6]",
+        "sample": true
+      }
+    ]
+  },
+  {
+    "title": "Reverse Linked List",
+    "description": "Given the `head` of a singly linked list, reverse the list, and return the reversed list.",
     "difficulty": "EASY",
-    "tags": "dp",
-    "description": "How many distinct ways can you climb to the top of a staircase of `n` steps?",
-    "solutionTemplate": "class Solution {\n    public int climbStairs(int n) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        Solution sol = new Solution();\n        System.out.print(sol.climbStairs(n));\n    }\n}",
+    "tags": ["linked-list", "recursion"],
+    "chapterTitle": "Linked List",
+    "problemType": "fundamentals",
+    "solutionTemplate": "class Solution {\n    public ListNode reverseList(ListNode head) {\n        \n    }\n}",
+    "driverCode": "import java.util.*;\n\nclass ListNode {\n    int val;\n    ListNode next;\n    ListNode() {}\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.hasNextInt() ? sc.nextInt() : 0;\n        if (n == 0) {\n            System.out.println(\"[]\");\n            return;\n        }\n        ListNode dummy = new ListNode(0);\n        ListNode curr = dummy;\n        for (int i = 0; i < n; i++) {\n            curr.next = new ListNode(sc.nextInt());\n            curr = curr.next;\n        }\n\n        Solution sol = new Solution();\n        ListNode head = sol.reverseList(dummy.next);\n        List<Integer> result = new ArrayList<>();\n        while (head != null) {\n            result.add(head.val);\n            head = head.next;\n        }\n        System.out.println(result);\n    }\n}",
     "testCases": [
-      { "input": "2", "output": "2", "sample": true },
-      { "input": "3", "output": "3", "sample": false }
-    ]
-  },
-  {
-    "title": "Number of Islands",
-    "difficulty": "MEDIUM",
-    "tags": "graph,dfs,bfs",
-    "description": "Given an `m x n` 2D binary grid, return the number of islands.",
-    "solutionTemplate": "class Solution {\n    public int numIslands(char[][] grid) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int m = sc.nextInt();\n        int n = sc.nextInt();\n        char[][] grid = new char[m][n];\n        for (int i = 0; i < m; i++) {\n            String row = sc.next();\n            grid[i] = row.toCharArray();\n        }\n        Solution sol = new Solution();\n        System.out.print(sol.numIslands(grid));\n    }\n}",
-    "testCases": [
-      { "input": "4 5 11110 11010 11000 00000", "output": "1", "sample": true }
-    ]
-  },
-  {
-    "title": "Valid Palindrome",
-    "difficulty": "EASY",
-    "tags": "string,two-pointers",
-    "description": "Given a string `s`, return true if it is a palindrome, considering only alphanumeric characters and ignoring cases.",
-    "solutionTemplate": "class Solution {\n    public boolean isPalindrome(String s) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String s = sc.hasNextLine() ? sc.nextLine() : \"\";\n        Solution sol = new Solution();\n        System.out.print(sol.isPalindrome(s));\n    }\n}",
-    "testCases": [
-      { "input": "A man, a plan, a canal: Panama", "output": "true", "sample": true },
-      { "input": "race a car", "output": "false", "sample": false }
-    ]
-  },
-  {
-    "title": "Merge Intervals",
-    "difficulty": "MEDIUM",
-    "tags": "array,sorting",
-    "description": "Given an array of `intervals`, merge all overlapping intervals.",
-    "solutionTemplate": "class Solution {\n    public int[][] merge(int[][] intervals) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[][] intervals = new int[n][2];\n        for (int i = 0; i < n; i++) {\n            intervals[i][0] = sc.nextInt();\n            intervals[i][1] = sc.nextInt();\n        }\n        Solution sol = new Solution();\n        int[][] res = sol.merge(intervals);\n        System.out.print(Arrays.deepToString(res));\n    }\n}",
-    "testCases": [
-      { "input": "4 1 3 2 6 8 10 15 18", "output": "[[1, 6], [8, 10], [15, 18]]", "sample": true }
-    ]
-  },
-  {
-    "title": "Three Sum",
-    "difficulty": "MEDIUM",
-    "tags": "array,two-pointers",
-    "description": "Find all unique triplets in the array which gives the sum of zero.",
-    "solutionTemplate": "class Solution {\n    public List<List<Integer>> threeSum(int[] nums) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n        Solution sol = new Solution();\n        List<List<Integer>> res = sol.threeSum(nums);\n        Collections.sort(res, (a, b) -> {\n            for (int i = 0; i < Math.min(a.size(), b.size()); i++) {\n                if (!a.get(i).equals(b.get(i))) return a.get(i) - b.get(i);\n            }\n            return a.size() - b.size();\n        });\n        System.out.print(res);\n    }\n}",
-    "testCases": [
-      { "input": "6 -1 0 1 2 -1 -4", "output": "[[-1, -1, 2], [-1, 0, 1]]", "sample": true }
-    ]
-  },
-  {
-    "title": "Product of Array Except Self",
-    "difficulty": "MEDIUM",
-    "tags": "array",
-    "description": "Return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.",
-    "solutionTemplate": "class Solution {\n    public int[] productExceptSelf(int[] nums) {\n        \n    }\n}",
-    "driverCode": "import java.util.*;\n\n{{SOLUTION}}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) nums[i] = sc.nextInt();\n        Solution sol = new Solution();\n        int[] res = sol.productExceptSelf(nums);\n        System.out.print(Arrays.toString(res));\n    }\n}",
-    "testCases": [
-      { "input": "4 1 2 3 4", "output": "[24, 12, 8, 6]", "sample": true }
+      {
+        "input": "5\n1 2 3 4 5",
+        "output": "[5, 4, 3, 2, 1]",
+        "sample": true
+      }
     ]
   }
 ]

@@ -1,103 +1,100 @@
-# CodeGraph Judge Engine
+# CodeGraph - Ultimate Online Judge & Learning Platform
 
-CodeGraph is a robust, Spring Boot-based **Online Judge System** designed for compiling, executing, and evaluating code submissions against predefined problem test cases.
+CodeGraph is a robust, production-ready **Online Judge System** and **Coding Challenge Platform**. It is designed to host, execute, and evaluate code submissions with high performance and security, mimicking the experience of industry-leading platforms like LeetCode.
 
-## ✨ Features
+---
 
--   **Multi-Problem Support**: Pre-initialized with standard LeetCode problems (Two Sum, Palindrome Number, Reverse String).
--   **Smart Code Wrapping**: Automatically detects and renames public classes to `Main` for standalone mode.
--   **Driver Template Engine**: Supports injection of user logic into a hidden `Main` class, providing a seamless LeetCode-like experience.
--   **Solution Templates**: Each problem can store a starting snippet (e.g., `class Solution { ... }`) to be displayed to users in the editor.
--   **Package Stripping**: Automatically removes `package` declarations from submissions to prevent execution errors.
--   **Resource Monitoring**: Execution includes constraints on memory usage and provides a strict time-limit watchdog.
--   **Advanced Paging & Sorting**: All major listing endpoints (Problems and Submissions) support standard Spring Data Paging and Sorting.
--   **Asynchronous Judging**: Code execution happens in a separate thread pool to ensure high responsiveness.
+## 🏗 Key Features
+
+### ⚖️ Judge Engine
+-   **Smart Code Wrapping**: Automatically isolates user code and reinjects it into a hidden `Main` execution shell.
+-   **Driver Template Engine**: Problems use a `driverCode` system with `{{SOLUTION}}` placeholders for seamless integration.
+-   **Real-time Monitoring**: Strict Time Limit (TTL) and Memory Limit enforcement.
+-   **Asynchronous Processing**: Final submissions are judged in parallel background thread pools.
+
+### 📝 Problem Management
+-   **Markdown Support**: Full Markdown support for problem descriptions.
+-   **Rich Media**: Native integration with **Cloudinary** for image hosting.
+-   **Multi-phase Testing**: Support for both "Sample" test cases (for quick runs) and "Hidden" test cases (for final evaluation).
+
+### 💾 Persistence & UX
+-   **Code Drafts (Auto-Save)**: Backend persistence for in-progress code to prevent loss on page refreshes or device switches.
+-   **Global API Wrapper**: Standardized `ApiResponse<T>` for consistent frontend integration.
+-   **Swagger Documentation**: Fully interactive OpenAPI 3.0 specs at `/swagger-ui/index.html`.
+
+### 📦 Portability & Deployment
+-   **Zero-Dependency Build**: Bundle an isolated Java Runtime (JRE) directly into the installer.
+-   **Platform Ready**: Specialized build scripts for **Ubuntu (DEB)**, **macOS (DMG)**, and **Windows (EXE/MSI)**.
+
+---
+
+## 🛠 Tech Stack
+-   **Back End**: Java 17, Spring Boot 3.x, Hibernate/JPA.
+-   **Database**: H2 (Development/Embedded), easily swappable to PostgreSQL/MySQL.
+-   **Images**: Cloudinary HTTP5 Integration.
+-   **Documentation**: SpringDoc OpenAPI (Swagger).
+-   **Build System**: Maven Wrapper (`mvnw`).
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
--   Java 17 or higher
--   Maven (or use the provided `./mvnw`)
+-   Java 17 JDK
+-   Environment variables for Cloudinary (Optional, for image uploads):
+    - `cloudinary.cloud_name`
+    - `cloudinary.api_key`
+    - `cloudinary.api_secret`
 
 ### Running the Server
-In the project root, run:
 ```bash
-./mvnw spring-boot:run
+./mvnw clean spring-boot:run
 ```
-The server will be available at [http://localhost:8080](http://localhost:8080).
-Interactive documentation is available at [Swagger UI](http://localhost:8080/swagger-ui/index.html).
+The server will start on [http://localhost:8080](http://localhost:8080).
 
-## 🛠 API Reference
+---
 
-### Public API (Learner)
--   **List Problems**: `GET /problems`
-    -   *Example*: `/problems?page=0&size=5&sort=difficulty,asc`
--   **Get Problem Details**: `GET /problems/{id}`
+## 📂 API Reference (Summary)
 
-### Admin API (Management)
--   **Create Problem**: `POST /admin/problems`
--   **Add Testcases**: `POST /admin/problems/{id}/testcases`
+### 👨‍💻 Learner API (General Access)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/problems` | List challenges with paging/sorting |
+| `GET` | `/problems/{id}` | Detailed problem data + template |
+| `GET` | `/problems/{id}/testcases` | Fetch sample inputs/outputs |
 
-## 🧪 Testing Scenario: Run vs Submit
+### ⚖️ Judge API
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/submit/run` | Synchronous run against sample cases |
+| `POST` | `/submit` | Asynchronous submission against hidden cases |
+| `GET` | `/submit/{id}` | Poll for submission status & metrics |
+| `GET` | `/submit/problem/{id}`| History of attempts for a problem |
 
-This scenario demonstrates the difference between "Running" code and "Submitting" it.
+### 💾 Code Draft API (Persistence)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/drafts` | Persist current editor code (Auto-save) |
+| `GET` | `/drafts/{problemId}`| Recover draft for a user/problem pair |
 
-### 1. Setup Hidden Test Cases (Admin)
-The **Two Sum** problem has sample test cases (e.g., `[2,7,11,15], target=9`). We will add a **Hidden** test case involving negative numbers.
-```bash
-# Add a hidden test case (sample=false)
-POST /admin/problems/1/testcases
-[
-  { "input": "3 -2 4 1", "expectedOutput": "[0, 1]", "sample": false }
-]
-```
+### 🛠 Admin API (Secured)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/admin/problems` | Create core problem metadata |
+| `POST` | `/admin/problems/{id}/images`| Upload images to Cloudinary (returns URLs) |
+| `POST` | `/admin/problems/{id}/testcases`| Link hidden/sample test cases |
 
-### 2. The Naive Solution (Common Beginner Mistake)
-A common mistake is trying to use the **Two-Pointer** approach on an array that isn't sorted (a technique that only works if the array is pre-sorted).
+---
 
-```java
-// User Code in Editor
-class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        // MISTAKE: Assumes array is sorted!
-        int left = 0, right = nums.length - 1;
-        while (left < right) {
-            int sum = nums[left] + nums[right];
-            if (sum == target) return new int[]{left, right};
-            if (sum < target) left++;
-            else right--;
-        }
-        return new int[]{0, 0};
-    }
-}
-```
+## 📦 Native Deployment (Production)
 
-### 3. Execution Results
-*   **Action: RUN**: The system executes against `[2,7,11,15], target=9` (which is already sorted).
-    *   **Result**: `ACCEPTED` (The mistake isn't caught yet!)
-*   **Action: SUBMIT**: The system executes against **all** tests, including the hidden unsorted case `[3,2,4], target=6` or negative cases.
-    *   **Result**: `WRONG_ANSWER`
-    *   **Diagnostic**:
-        *   **Failed Input**: `6\n3\n3 2 4`
-        *   **Expected**: `[1, 2]`
-        *   **Actual**: `[0, 0]` (or something incorrect)
+Use the provided scripts in the `scripts/` folder to create a production-ready, zero-dependency installation package for your OS.
 
-This perfectly demonstrates how **Hidden Test Cases** protect the integrity of the problem by catching logic that only works on specific kinds of input!
+- **Ubuntu/Debian**: `./scripts/build-linux.sh` (Produces `.deb`)
+- **macOS**: `./scripts/build-mac.sh` (Produces `.dmg`)
+- **Windows**: `./scripts/build-win.ps1` (Produces `.msi`)
 
-### Submissions
--   **Submit Code**: `POST /submit`
--   **Submission History**: `GET /submit`
--   **Problem History**: `GET /submit/problem/{problemId}`
--   **Get Specific Result**: `GET /submit/{id}`
+---
 
-## 📝 Problem Configuration
-
-Each `Problem` now supports:
--   `driverCode`: The "hidden" code containing `public class Main` and test case runner logic. It uses `{{SOLUTION}}` as a placeholder for user code.
--   `solutionTemplate`: The initial snippet displayed to users in their code editor (e.g., `public class Solution { public int twoSum(...) { } }`).
-
-## ⚙️ Configuration
-The engine can be tuned via `src/main/resources/application.properties`:
--   `judge.timeout-seconds`: Maximum execution time.
--   `judge.java-memory`: Maximum JVM heap memory for the user code.
--   `judge.java-path` / `judge.javac-path`: Path to JDK binaries.
+## 🧩 Integration Guide for AI Agents
+For instructions on how to integrate these APIs into a Frontend application (React/Vue), please see the **[AI_AGENT_GUIDE.md](./AI_AGENT_GUIDE.md)**.
