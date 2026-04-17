@@ -1,22 +1,24 @@
 package com.codegraph.admin.controller;
 
 import com.codegraph.common.dto.ApiResponse;
+import com.codegraph.curriculum.entity.Course;
+import com.codegraph.curriculum.entity.Chapter;
+import com.codegraph.problem.entity.Problem;
+import com.codegraph.admin.service.AdminService;
+import com.codegraph.admin.dto.CreateCourseRequest;
+import com.codegraph.admin.dto.CreateChapterRequest;
 import com.codegraph.admin.dto.CreateProblemRequest;
 import com.codegraph.admin.dto.TestCaseRequest;
-import com.codegraph.admin.service.AdminService;
-import com.codegraph.problem.entity.Problem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-@Tag(name = "Problem Management (Admin)", description = "Endpoints for creating and configuring coding challenges")
+@Tag(name = "Admin API", description = "Endpoints for managing curriculum and problems")
 public class AdminController {
 
     private final AdminService adminService;
@@ -25,32 +27,59 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+    @PostMapping("/courses")
+    @Operation(summary = "Create a new course")
+    public ApiResponse<Course> createCourse(@RequestBody CreateCourseRequest request) {
+        return ApiResponse.success(adminService.createCourse(request));
+    }
+
+    @PostMapping("/courses/{courseId}/chapters")
+    @Operation(summary = "Create a new chapter in a course")
+    public ApiResponse<Chapter> createChapter(@PathVariable String courseId, @RequestBody CreateChapterRequest request) {
+        return ApiResponse.success(adminService.createChapter(courseId, request));
+    }
+
     @PostMapping("/problems")
-    @Operation(summary = "Create a new problem", description = "Stores core problem data (title, difficulty, solution template, driver code, etc.).")
+    @Operation(summary = "Create a new problem")
     public ApiResponse<Problem> createProblem(@RequestBody CreateProblemRequest request) {
-        return ApiResponse.success("Problem created successfully", adminService.createProblem(request));
+        return ApiResponse.success(adminService.createProblem(request));
     }
 
     @PutMapping("/problems/{id}")
-    @Operation(summary = "Update problem details", description = "Updates title, description, driver code, solution template, or limits for an existing problem.")
-    public ApiResponse<Problem> updateProblem(@PathVariable Long id, @RequestBody CreateProblemRequest request) {
-        return ApiResponse.success("Problem updated successfully", adminService.updateProblem(id, request));
+    @Operation(summary = "Update an existing problem")
+    public ApiResponse<Problem> updateProblem(@PathVariable String id, @RequestBody CreateProblemRequest request) {
+        return ApiResponse.success(adminService.updateProblem(id, request));
     }
 
-    @PostMapping("/problems/{id}/testcases")
-    @Operation(summary = "Add test cases to a problem", description = "Adds a list of input/output pairs to the specified problem for validation.")
-    public ApiResponse<String> addTestCases(@PathVariable Long id,
-                                @RequestBody List<TestCaseRequest> requests) {
-        adminService.addTestCases(id, requests);
-        return ApiResponse.success("Testcases added successfully", "Success");
+    @PostMapping("/problems/{problemId}/testcases")
+    @Operation(summary = "Add test cases to a problem")
+    public ApiResponse<String> addTestCases(@PathVariable String problemId, @RequestBody List<TestCaseRequest> requests) {
+        adminService.addTestCases(problemId, requests);
+        return ApiResponse.success("Test cases added successfully");
     }
 
-    @PostMapping(value = "/problems/{id}/images", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Upload problem images to Cloudinary", description = "Uploads static images to Cloudinary and returns the hosted URLs.")
-    public ApiResponse<List<String>> uploadImages(
-            @PathVariable Long id,
-            @RequestBody(description = "Files to upload", content = @Content(mediaType = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE))
-            @RequestPart("files") MultipartFile[] files) throws Exception {
-        return ApiResponse.success("Images uploaded successfully", adminService.uploadImages(id, files));
+    @GetMapping("/problems/{problemId}/testcases/all")
+    @Operation(summary = "Get all test cases for a problem")
+    public ApiResponse<List<com.codegraph.testcase.entity.TestCase>> getAllTestCases(@PathVariable String problemId) {
+        return ApiResponse.success(adminService.fetchAllTestCases(problemId));
+    }
+
+    @PostMapping("/problems/{problemId}/images")
+    @Operation(summary = "Upload images for a problem description")
+    public ApiResponse<List<String>> uploadImages(@PathVariable String problemId, @RequestParam("files") MultipartFile[] files) throws Exception {
+        return ApiResponse.success(adminService.uploadImages(problemId, files));
+    }
+
+    @PostMapping("/upload")
+    @Operation(summary = "Generic image upload to Cloudinary")
+    public ApiResponse<String> uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
+        return ApiResponse.success(adminService.uploadImage(file));
+    }
+
+    @DeleteMapping("/problems/{id}")
+    @Operation(summary = "Delete an existing problem")
+    public ApiResponse<Void> deleteProblem(@PathVariable String id) {
+        adminService.deleteProblem(id);
+        return ApiResponse.success(null);
     }
 }

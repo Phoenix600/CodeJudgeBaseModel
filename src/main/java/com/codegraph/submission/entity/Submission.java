@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 public class Submission {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private Long problemId;
+    private String problemId;
 
     @Lob
     @Column(columnDefinition = "CLOB")
@@ -54,6 +54,16 @@ public class Submission {
 
     private Integer passedTestCases = 0;
     private Integer totalTestCases = 0;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String failedTestCaseImage;
+
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String failedTestCaseExplanation;
+
+    private Integer failedTestCaseImageScale;
 
     private LocalDateTime submittedAt = LocalDateTime.now();
 

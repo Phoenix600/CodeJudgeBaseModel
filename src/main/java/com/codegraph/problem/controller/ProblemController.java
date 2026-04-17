@@ -31,13 +31,13 @@ public class ProblemController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get problem details by ID", description = "Retrieves full details of a specific problem including its solution template.")
-    public ApiResponse<Problem> getProblemById(@PathVariable Long id) {
+    public ApiResponse<Problem> getProblemById(@PathVariable String id) {
         return ApiResponse.success(adminService.fetchProblemById(id));
     }
 
     @GetMapping("/{id}/testcases")
     @Operation(summary = "Get sample test cases", description = "Retrieves ONLY the visible sample test cases for a problem.")
-    public ApiResponse<List<TestCase>> getSampleTestCases(@PathVariable Long id) {
+    public ApiResponse<List<TestCase>> getSampleTestCases(@PathVariable String id) {
         return ApiResponse.success(adminService.fetchSampleTestCases(id));
     }
 }
