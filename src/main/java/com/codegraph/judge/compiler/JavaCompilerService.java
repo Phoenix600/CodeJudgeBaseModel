@@ -16,10 +16,13 @@ public class JavaCompilerService {
     public void compile(File workspace) {
 
         String javacPath;
+        String os = System.getProperty("os.name").toLowerCase();
+        String executableName = os.contains("win") ? "javac.exe" : "javac";
+
         if (judgeConfig.getBundledJdkPath() != null && !judgeConfig.getBundledJdkPath().isBlank()) {
-            javacPath = new File(judgeConfig.getBundledJdkPath(), "bin/javac").getAbsolutePath();
+            javacPath = new File(judgeConfig.getBundledJdkPath(), "bin/" + executableName).getAbsolutePath();
         } else {
-            javacPath = (judgeConfig.getJavacPath() != null) ? judgeConfig.getJavacPath() : "javac";
+            javacPath = (judgeConfig.getJavacPath() != null) ? judgeConfig.getJavacPath() : executableName;
         }
 
         try {

@@ -19,10 +19,14 @@ public class JavaRunner {
         long start = System.currentTimeMillis();
 
         String javaPath;
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean isWindows = os.contains("win");
+        String executableName = isWindows ? "java.exe" : "java";
+
         if (config.getBundledJdkPath() != null && !config.getBundledJdkPath().isBlank()) {
-            javaPath = new File(config.getBundledJdkPath(), "bin/java").getAbsolutePath();
+            javaPath = new File(config.getBundledJdkPath(), "bin/" + executableName).getAbsolutePath();
         } else {
-            javaPath = (config.getJavaPath() != null) ? config.getJavaPath() : "java";
+            javaPath = (config.getJavaPath() != null) ? config.getJavaPath() : executableName;
         }
 
         try {
@@ -46,19 +50,35 @@ public class JavaRunner {
             Thread monitor = new Thread(() -> {
                 try {
                     while (process.isAlive()) {
-                        // Use 'ps -o rss=' which is standard on Mac/Linux
-                        Process p = Runtime.getRuntime().exec("ps -p " + pid + " -o rss=");
+                        Process p;
+                        if (isWindows) {
+                            p = Runtime.getRuntime().exec("tasklist /fi \"pid eq " + pid + "\" /fo csv /nh");
+                        } else {
+                            p = Runtime.getRuntime().exec("ps -p " + pid + " -o rss=");
+                        }
                         try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                             String line;
                             while ((line = reader.readLine()) != null) {
                                 line = line.trim();
                                 if (!line.isEmpty()) {
                                     try {
-                                        long rss = Long.parseLong(line);
+                                        long rss;
+                                        if (isWindows) {
+                                            // Format: "java.exe","1234","Console","1","24,560 K"
+                                            String[] parts = line.split(",");
+                                            if (parts.length >= 5) {
+                                                String memStr = parts[4].replace("\"", "").replace("K", "").replace(",", "").replace(" ", "").trim();
+                                                rss = Long.parseLong(memStr);
+                                            } else {
+                                                continue;
+                                            }
+                                        } else {
+                                            rss = Long.parseLong(line);
+                                        }
                                         synchronized (peakMemory) {
                                             if (rss > peakMemory[0]) peakMemory[0] = rss;
                                         }
-                                    } catch (NumberFormatException ignored) {}
+                                    } catch (Exception ignored) {}
                                 }
                             }
                         }
