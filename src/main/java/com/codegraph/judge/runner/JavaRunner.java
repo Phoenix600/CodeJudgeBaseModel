@@ -21,12 +21,22 @@ public class JavaRunner {
         String javaPath;
         String os = System.getProperty("os.name").toLowerCase();
         boolean isWindows = os.contains("win");
-        String executableName = isWindows ? "java.exe" : "java";
 
-        if (config.getBundledJdkPath() != null && !config.getBundledJdkPath().isBlank()) {
-            javaPath = new File(config.getBundledJdkPath(), "bin/" + executableName).getAbsolutePath();
+        String bundledPath = config.getBundledJdkPath();
+        if (bundledPath != null && !bundledPath.isBlank()) {
+            File binDir = new File(bundledPath, "bin");
+            File javaFile = new File(binDir, isWindows ? "java.exe" : "java");
+            
+            // Fallback: if we are on Windows but the .exe isn't found, try without
+            if (isWindows && !javaFile.exists()) {
+                File noExe = new File(binDir, "java");
+                if (noExe.exists()) javaFile = noExe;
+            }
+            
+            javaPath = javaFile.getAbsolutePath();
         } else {
-            javaPath = (config.getJavaPath() != null) ? config.getJavaPath() : executableName;
+            String base = (config.getJavaPath() != null) ? config.getJavaPath() : "java";
+            javaPath = (isWindows && !base.endsWith(".exe")) ? base + ".exe" : base;
         }
 
         try {
