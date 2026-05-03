@@ -25,8 +25,6 @@ public class JudgeEngine {
     private final JavaRunner runner;
     private final OutputComparator comparator;
     private final SubmissionRepository submissionRepository;
-    private final TestCaseRepository testCaseRepository;
-    private final com.codegraph.problem.repository.ProblemRepository problemRepository;
 
     public JudgeEngine(WorkspaceManager workspaceManager,
                        CodeValidator validator,
@@ -34,9 +32,7 @@ public class JudgeEngine {
                        JavaCompilerService compiler,
                        JavaRunner runner,
                        OutputComparator comparator,
-                       SubmissionRepository submissionRepository,
-                       TestCaseRepository testCaseRepository,
-                       com.codegraph.problem.repository.ProblemRepository problemRepository) {
+                       SubmissionRepository submissionRepository) {
 
         this.workspaceManager = workspaceManager;
         this.validator = validator;
@@ -45,8 +41,6 @@ public class JudgeEngine {
         this.runner = runner;
         this.comparator = comparator;
         this.submissionRepository = submissionRepository;
-        this.testCaseRepository = testCaseRepository;
-        this.problemRepository = problemRepository;
     }
 
     public void judge(Submission submission, String driverCode, java.util.List<com.codegraph.submission.dto.TestCaseDto> testcases) {

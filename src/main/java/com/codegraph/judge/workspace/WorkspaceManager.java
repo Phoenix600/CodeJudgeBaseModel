@@ -4,7 +4,6 @@ import com.codegraph.config.JudgeConfig;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileWriter;
 
 @Component
 public class WorkspaceManager {

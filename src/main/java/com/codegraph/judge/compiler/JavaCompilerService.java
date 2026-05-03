@@ -17,23 +17,12 @@ public class JavaCompilerService {
 
         String javacPath;
         String os = System.getProperty("os.name").toLowerCase();
-        boolean isWindows = os.contains("win");
-        
-        String bundledPath = judgeConfig.getBundledJdkPath();
-        if (bundledPath != null && !bundledPath.isBlank()) {
-            File binDir = new File(bundledPath, "bin");
-            File javacFile = new File(binDir, isWindows ? "javac.exe" : "javac");
-            
-            // Fallback: if we are on Windows but the .exe isn't found, try without (unlikely but safe)
-            if (isWindows && !javacFile.exists()) {
-                File noExe = new File(binDir, "javac");
-                if (noExe.exists()) javacFile = noExe;
-            }
-            
-            javacPath = javacFile.getAbsolutePath();
+        String executableName = os.contains("win") ? "javac.exe" : "javac";
+
+        if (judgeConfig.getBundledJdkPath() != null && !judgeConfig.getBundledJdkPath().isBlank()) {
+            javacPath = new File(judgeConfig.getBundledJdkPath(), "bin/" + executableName).getAbsolutePath();
         } else {
-            String base = (judgeConfig.getJavacPath() != null) ? judgeConfig.getJavacPath() : "javac";
-            javacPath = (isWindows && !base.endsWith(".exe")) ? base + ".exe" : base;
+            javacPath = (judgeConfig.getJavacPath() != null) ? judgeConfig.getJavacPath() : executableName;
         }
 
         try {

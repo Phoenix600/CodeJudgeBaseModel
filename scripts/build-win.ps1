@@ -18,10 +18,11 @@ New-Item -ItemType Directory -Path dist
 Copy-Item "target\$MAIN_JAR" "deploy"
 
 # 3. Create Isolated Runtime (Windows version)
-Write-Host "Generating isolated Windows Java runtime..." -ForegroundColor Yellow
-if (Test-Path runtime) { Remove-Item -Force -Recurse runtime }
-jlink --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,jdk.compiler `
-      --output runtime --strip-debug --no-header-files --no-man-pages --compress=2
+if (!(Test-Path runtime)) {
+    Write-Host "Generating isolated Windows Java runtime..." -ForegroundColor Yellow
+    jlink --add-modules java.base,java.sql,java.naming,java.desktop,java.management,java.security.jgss,java.instrument,jdk.compiler `
+          --output runtime --strip-debug --no-header-files --no-man-pages --compress=2
+}
 
 # 4. Build the EXE Installer
 Write-Host "Building native EXE installer..." -ForegroundColor Yellow

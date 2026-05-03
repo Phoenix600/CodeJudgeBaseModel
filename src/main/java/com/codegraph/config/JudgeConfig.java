@@ -3,6 +3,8 @@ package com.codegraph.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 @Component
 @ConfigurationProperties(prefix = "judge")
 public class JudgeConfig {
@@ -15,7 +17,20 @@ public class JudgeConfig {
     private String bundledJdkPath;
 
     public String getWorkspace() {
-        return workspace;
+        if (workspace == null || workspace.isBlank()) return "./workspaces";
+        
+        File path = new File(workspace);
+        if (path.isAbsolute()) return workspace;
+
+        // Try relative to the JAR location (handling jpackage structure)
+        try {
+            File jarPath = new File(JudgeConfig.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            File appRoot = jarPath.getParentFile().getParentFile(); 
+            File resolvedPath = new File(appRoot, workspace);
+            return resolvedPath.getAbsolutePath();
+        } catch (Exception ignored) {}
+
+        return path.getAbsolutePath();
     }
 
     public void setWorkspace(String workspace) {
@@ -55,7 +70,35 @@ public class JudgeConfig {
     }
 
     public String getBundledJdkPath() {
-        return bundledJdkPath;
+        if (bundledJdkPath == null || bundledJdkPath.isBlank()) return null;
+        
+        File path = new File(bundledJdkPath);
+        if (path.isAbsolute()) return bundledJdkPath;
+
+        // Try relative to CWD
+        if (new File(path, "bin").exists()) {
+            return path.getAbsolutePath();
+        }
+
+        // Try relative to the JAR location (handling jpackage structure: ROOT/app/jar)
+        try {
+            File jarPath = new File(JudgeConfig.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            File appRoot = jarPath.getParentFile().getParentFile(); 
+            File bundledPath = new File(appRoot, bundledJdkPath);
+            if (new File(bundledPath, "bin").exists()) {
+                return bundledPath.getAbsolutePath();
+            }
+        } catch (Exception ignored) {}
+
+        // Windows specific fallback: C:\CodeGraph\runtime
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            File fallbackPath = new File("C:\\CodeGraph", bundledJdkPath);
+            if (new File(fallbackPath, "bin").exists()) {
+                return fallbackPath.getAbsolutePath();
+            }
+        }
+
+        return path.getAbsolutePath();
     }
 
     public void setBundledJdkPath(String bundledJdkPath) {
