@@ -33,6 +33,7 @@ jpackage --type app-image `
          --input deploy `
          --main-jar $MAIN_JAR `
          --main-class $LAUNCHER `
-         --runtime-image runtime
+         --runtime-image runtime `
+         --win-console
 
 Write-Host "Build Complete! Find your EXE in the dist folder." -ForegroundColor Green
